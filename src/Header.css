@@ -1,9 +1,54 @@
 .header{
     background-color: #131921;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100%;
 }
 
 .header_logo{
     width: 100px;
     margin: 18px 20px 0 20px;
     margin-top: 18px;
+}
+.header_nav{
+   display: flex;
+   justify-content: space-evenly;
+}
+.header_option{
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+}
+.header_option_basket{
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    
+}
+.header_option_lineOne{
+    font-size: 10px;
+}
+.header_option_lineTwo{
+font-size: 13px;
+font-weight: 800;
+}
+.header_link{
+   color: white;
+   text-decoration: none;
+}
+.header_search{
+   display: flex;
+   flex: 1;
+}
+.header_searchInput{
+   height: 12px;
+   padding: 10px;
+   border: none;
+   width: 100%;
+}
+.header_searchIcon{
+    padding: 5px;
+    height: 22px;
+    background-color: #cd9042;
 }
