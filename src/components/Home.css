@@ -3,11 +3,11 @@
     grid-template-columns: 3fr 1fr;
 }
 .product-container{
-    margin-top: 3rem;
+    margin-top: 4rem;
     margin-left: 1rem;
 }
 .cart-container{
    position: fixed;
    right: 1rem;
-   top: 3rem;
+   top: 4rem;
 }

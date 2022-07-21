@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Header.css';
 import logo from "../src/images/amazon_PNG25.png"
 import { Link } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { CgShoppingCart } from 'react-icons/cg';
+import { UserContext } from './context/Context';
 
 const Header = () => {
+    const cart = useContext(UserContext);
     return (
-        <nav className='header'>
+            <nav className='header'>
             <Link to="/">
             <img className='header_logo' src={logo} alt="" />
             </Link>
@@ -37,7 +39,7 @@ const Header = () => {
          <Link to="/checkout" className='header_link'>
          <div className="header_option_basket">
             <CgShoppingCart/>
-          <span className='header_option_lineTwo'>0</span>
+          <span className='header_option_lineTwo'>{cart?.length}</span>
          </div>
          </Link>
         </div>
