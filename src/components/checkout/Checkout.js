@@ -1,36 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { getDatabase, ref, child, get} from "firebase/database";
+import React, { useContext, useEffect  } from 'react';
+import { getDatabase, ref, remove} from "firebase/database";
 import { app } from '../../firebase/firebase';
 import "./Checkout.css";
+import { UserContext } from '../../context/Context';
+import { useOrder } from '../useOrder/useOrder';
 
 
 const Checkout = () => {
-    const [products,setProducts]=useState([]);
-
+    const {order} = useOrder();
+    const {setLength}=useContext(UserContext);
     useEffect(()=>{
-        const dbRef = ref(getDatabase(app));
-    get(child(dbRef, "order"))
-    .then((snapshot) => {
-        const value = snapshot.val()
-        if (value) {
-            setProducts(value.array)
-        }
-    })
-    .catch((error) => {
-    console.error(error)
-    })
-    },[]);
-    if (products.length===0) {
+        setLength(order.length);
+      },[order.length]);
+    if (order.length===0) {
         return<p className='no-order'>You have no order</p>
     }
-    const handleCancel=(id)=>{
-        console.log(id)
-    }
+    function handleCancel(index) {
+        const db = getDatabase(app);
+        const cancelRef = ref(db, `order/array/${index}`);
+        remove(cancelRef);
+        console.log(index ,'deleted successfull')
+        setLength(order.length-1);
+      }
     return (
             <div className='checkout-container'>
             {
-            products.map(product => 
-                <div key={products.indexOf(product)} className="product">
+            order.map(product => 
+                <div key={order.indexOf(product)} className="product">
                 <div>
                     <img src={product?.img} alt="" />
                 </div>
@@ -40,7 +36,7 @@ const Checkout = () => {
                     <p>Price: {product?.price}</p>
                     <p><small>only {product?.stock} left in stock - order soon</small></p>
                     <br />
-                    <button onClick={()=>handleCancel(product.key)} className="btn-regular"
+                    <button onClick={()=>handleCancel(order.indexOf(product))} className="btn-regular"
                     >Cancel Order</button>
                     <button className="btn-regular"
                     >Make Payment</button>

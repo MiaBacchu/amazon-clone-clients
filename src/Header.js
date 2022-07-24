@@ -7,7 +7,7 @@ import { CgShoppingCart } from 'react-icons/cg';
 import { UserContext } from './context/Context';
 
 const Header = () => {
-    const cart = useContext(UserContext);
+    const {length} = useContext(UserContext);
     return (
             <nav className='header'>
             <Link to="/">
@@ -39,7 +39,7 @@ const Header = () => {
          <Link to="/checkout" className='header_link'>
          <div className="header_option_basket">
             <CgShoppingCart/>
-          <span className='header_option_lineTwo'>{cart?.length}</span>
+          <span className='header_option_lineTwo'>{length}</span>
          </div>
          </Link>
         </div>

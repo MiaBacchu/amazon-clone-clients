@@ -2,9 +2,9 @@ import React, { createContext } from 'react';
 
 export const UserContext = createContext();
 
-const Context = ({children,cart}) => {
+const Context = ({children,value}) => {
     return (
-        <UserContext.Provider value={cart}>
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );

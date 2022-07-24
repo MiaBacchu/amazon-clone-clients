@@ -1,18 +1,22 @@
 import './Home.css';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getDatabase, ref, child, get, set} from "firebase/database";
 import { app } from '../firebase/firebase';
 import Product from './product/Product';
 import Cart from './cart/Cart';
-import Context from '../context/Context';
-import Header from '../Header';
+import { useOrder } from './useOrder/useOrder';
+import { UserContext } from '../context/Context';
 
 const Home = () => {
-    const [products,setProducts]=useState([]);
-    const [cart,setCart]=useState([]);
+    const {order} = useOrder();
+    const {setLength} = useContext(UserContext);
 
+    useEffect(()=>{
+        setLength(order.length);
+      },[order.length]);
+
+    const [products,setProducts] = useState([]);
     function writeUserData(array) {
-        console.log(array)
         const db = getDatabase(app);
         set(ref(db, 'order'), {
           array
@@ -21,35 +25,20 @@ const Home = () => {
 
     useEffect(()=>{
         const dbRef = ref(getDatabase(app));
-    get(child(dbRef, "order"))
-    .then((snapshot) => {
-        const value = snapshot.val()
-        if (value) {
-            setCart(value.array)
-        }
-    })
-    .catch((error) => {
-    console.error(error)
-    })
-    },[]);
-
-    useEffect(()=>{
-        const dbRef = ref(getDatabase(app));
 get(child(dbRef, "products"))
 .then((snapshot) => {
-    setProducts(snapshot.val())
+    setProducts(snapshot.val());
 })
 .catch((error) => {
   console.error(error)
 })
 },[]);
 const handleAddToCart=(p)=>{
-    const array=[...cart,p]
-    setCart(array)
-    writeUserData(array)};
-    return (
-        <Context cart={cart}>
-            <Header></Header>
+    let array = [...order,p];
+    writeUserData(array);
+    setLength(array.length)
+};
+    return (    
         <div className='home-container'>
             <div className='product-container'>
             {
@@ -63,11 +52,10 @@ const handleAddToCart=(p)=>{
             }
             </div>
             <div className='cart-container'>
-                <Cart cart={cart}>
+                <Cart order={order}>
                 </Cart>
             </div>
         </div>
-        </Context>
     );
 };
 
