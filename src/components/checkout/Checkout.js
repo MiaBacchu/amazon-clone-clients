@@ -1,4 +1,4 @@
-import React, { useContext, useEffect  } from 'react';
+import React, { useContext, useEffect, useState  } from 'react';
 import { getDatabase, ref, remove} from "firebase/database";
 import { app } from '../../firebase/firebase';
 import "./Checkout.css";
@@ -15,11 +15,10 @@ const Checkout = () => {
     if (order.length===0) {
         return<p className='no-order'>You have no order</p>
     }
-    function handleCancel(index) {
+    function handleCancel(id) {
         const db = getDatabase(app);
-        const cancelRef = ref(db, `order/array/${index}`);
+        const cancelRef = ref(db, `order/${id}`);
         remove(cancelRef);
-        console.log(index ,'deleted successfull')
         setLength(order.length-1);
       }
     return (
@@ -36,7 +35,7 @@ const Checkout = () => {
                     <p>Price: {product?.price}</p>
                     <p><small>only {product?.stock} left in stock - order soon</small></p>
                     <br />
-                    <button onClick={()=>handleCancel(order.indexOf(product))} className="btn-regular"
+                    <button onClick={()=>handleCancel(product.id)} className="btn-regular"
                     >Cancel Order</button>
                     <button className="btn-regular"
                     >Make Payment</button>

@@ -1,6 +1,6 @@
 import './Home.css';
 import React, { useContext, useEffect, useState } from 'react';
-import { getDatabase, ref, child, get, set} from "firebase/database";
+import { getDatabase, ref, child, get, set, push} from "firebase/database";
 import { app } from '../firebase/firebase';
 import Product from './product/Product';
 import Cart from './cart/Cart';
@@ -9,18 +9,20 @@ import { UserContext } from '../context/Context';
 
 const Home = () => {
     const {order} = useOrder();
-    const {setLength} = useContext(UserContext);
+    const {length,setLength} = useContext(UserContext);
+    const [products,setProducts] = useState([]);
 
     useEffect(()=>{
         setLength(order.length);
       },[order.length]);
 
-    const [products,setProducts] = useState([]);
-    function writeUserData(array) {
+    function writeUserData(props) {
         const db = getDatabase(app);
-        set(ref(db, 'order'), {
-          array
-        })
+        const id = push(child(ref(db), 'order')).key;
+        set(ref(db, 'order/' + id), {
+          ...props,id
+        });
+        setLength(length+1);
       }
 
     useEffect(()=>{
@@ -33,10 +35,8 @@ get(child(dbRef, "products"))
   console.error(error)
 })
 },[]);
-const handleAddToCart=(p)=>{
-    let array = [...order,p];
-    writeUserData(array);
-    setLength(array.length)
+const handleAddToCart=(props)=>{
+    writeUserData(props);
 };
     return (    
         <div className='home-container'>
