@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState  } from 'react';
+import React, { useContext, useEffect} from 'react';
 import { getDatabase, ref, remove} from "firebase/database";
 import { app } from '../../firebase/firebase';
 import "./Checkout.css";
 import { UserContext } from '../../context/Context';
-import { useOrder } from '../useOrder/useOrder';
-
+import { useOrder } from '../../hooks/useOrder';
+import {Link} from 'react-router-dom'
 
 const Checkout = () => {
     const {order} = useOrder();
@@ -37,8 +37,8 @@ const Checkout = () => {
                     <br />
                     <button onClick={()=>handleCancel(product.id)} className="btn-regular"
                     >Cancel Order</button>
-                    <button className="btn-regular"
-                    >Make Payment</button>
+                    <Link to={`/payment/${product.id}`} className="btn-regular"
+                    >Make Payment</Link>
                 </div>
             </div>)
             }

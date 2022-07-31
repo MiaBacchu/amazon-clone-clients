@@ -1,9 +1,11 @@
 import { child, get, getDatabase, ref } from "firebase/database";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/Context";
-import { app } from "../../firebase/firebase";
+import { UserContext } from "../context/Context";
+import { app } from "../firebase/firebase";
+import useAuth from "./useAuth";
 
 export const useOrder = () =>{
+    const {loggedInUser} = useAuth();
     const {length} = useContext(UserContext);
     const [order,setOrder] = useState([]);
     useEffect(()=>{
@@ -18,14 +20,14 @@ export const useOrder = () =>{
         else {
             setOrder(value);
             const values = Object.values(value);
-            const checked = values.filter( od => {return od});
+            const checked = values.filter( od => od.email===loggedInUser?.email);
             setOrder(checked);
         }
     })
     .catch((error) => {
     console.error(error)
     })
-    },[length]);
+    },[length,loggedInUser]);
 
     return(
         {

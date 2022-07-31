@@ -4,10 +4,13 @@ import { getDatabase, ref, child, get, set, push} from "firebase/database";
 import { app } from '../firebase/firebase';
 import Product from './product/Product';
 import Cart from './cart/Cart';
-import { useOrder } from './useOrder/useOrder';
 import { UserContext } from '../context/Context';
+import { useOrder } from '../hooks/useOrder';
+import useAuth from '../hooks/useAuth';
+
 
 const Home = () => {
+    const {loggedInUser}=useAuth();
     const {order} = useOrder();
     const {length,setLength} = useContext(UserContext);
     const [products,setProducts] = useState([]);
@@ -19,10 +22,16 @@ const Home = () => {
     function writeUserData(props) {
         const db = getDatabase(app);
         const id = push(child(ref(db), 'order')).key;
-        set(ref(db, 'order/' + id), {
-          ...props,id
-        });
-        setLength(length+1);
+        if (!loggedInUser?.email) {
+          alert('You have to login first');
+          return;
+        }
+        else{
+          set(ref(db, 'order/' + id), {
+            ...props,id,email:loggedInUser.email
+          });
+          setLength(length+1);
+        }
       }
 
     useEffect(()=>{
